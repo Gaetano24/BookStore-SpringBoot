@@ -1,0 +1,20 @@
+spring:
+  application:
+    name: BookStore-API
+  datasource:
+    url: jdbc:mysql://localhost:3306/bookstore
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password: Gaetano24072001!
+  jpa:
+    database-platform: org.hibernate.dialect.MySQLDialect
+    hibernate:
+      ddl-auto: validate # Questa opzione non determina cambiamenti del database, effettua solo una validazione
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect # Specifica il dialetto del database
+        show_sql: true # Mostra le query SQL generate da Hibernate (utile per scopi di debug)
+        format_sql: true # Formatta le query SQL generate per una migliore leggibilità
+
+server:
+  port: 8080
