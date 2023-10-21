@@ -7,6 +7,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
 import org.hibernate.annotations.CreationTimestamp;
 
@@ -17,6 +18,7 @@ import java.util.List;
 @Entity
 @Table(name = "orders")
 @Data
+@NoArgsConstructor
 public class Order implements Serializable {
 
     @Id
@@ -44,6 +46,10 @@ public class Order implements Serializable {
     @JsonIgnore
     @ToString.Exclude
     private List<OrderDetail> orderDetails;
+
+    public Order(User user) {
+        this.user = user;
+    }
 
 }
 

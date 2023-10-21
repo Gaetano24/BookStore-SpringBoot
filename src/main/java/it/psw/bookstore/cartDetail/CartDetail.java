@@ -7,6 +7,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import java.io.Serializable;
@@ -14,6 +15,7 @@ import java.io.Serializable;
 @Entity
 @Table(name = "cart_details")
 @Data
+@NoArgsConstructor
 public class CartDetail implements Serializable {
 
     @Id
@@ -50,5 +52,13 @@ public class CartDetail implements Serializable {
     @ToString.Exclude
     @Column(name = "version", nullable = false)
     private long version;
+
+    public CartDetail(Cart cart, Book book) {
+        this.cart = cart;
+        this.book = book;
+        this.price = book.getPrice();
+        this.quantity = 1;
+        this.subTotal = book.getPrice();
+    }
 
 }
