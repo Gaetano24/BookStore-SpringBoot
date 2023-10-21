@@ -1,4 +1,4 @@
-package it.psw.bookstore.order;
+package it.psw.bookstore.exceptions;
 
 public class OrderNotFoundException extends Exception {
     public OrderNotFoundException() {
