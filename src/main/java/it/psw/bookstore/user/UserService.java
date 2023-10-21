@@ -37,7 +37,7 @@ public class UserService implements UserServiceInterface{
     }
 
     @Override
-    @Transactional(readOnly = true)
+    @Transactional
     public User save(User user) throws MailUserAlreadyExistsException {
         if(this.userRepository.existsByEmail(user.getEmail())) {
             throw new MailUserAlreadyExistsException();
