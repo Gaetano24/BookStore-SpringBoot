@@ -81,6 +81,7 @@ public class BookController {
             return new ResponseEntity<>("Book not found", HttpStatus.NOT_FOUND);
         }
     }
+
     @PutMapping("/{id}/increaseStock")
     public ResponseEntity<?> increaseStock(@PathVariable int id, @RequestParam int quantity) {
         try {

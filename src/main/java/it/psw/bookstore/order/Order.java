@@ -6,6 +6,7 @@ import it.psw.bookstore.user.User;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.PositiveOrZero;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -39,7 +40,7 @@ public class Order implements Serializable {
 
     @Column(name = "total")
     @NotNull
-    @Positive
+    @PositiveOrZero
     private float total;
 
     @OneToMany(targetEntity = OrderDetail.class, mappedBy = "order", fetch = FetchType.LAZY)
