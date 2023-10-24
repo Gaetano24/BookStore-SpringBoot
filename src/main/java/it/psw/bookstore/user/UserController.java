@@ -19,9 +19,15 @@ public class UserController {
         this.userService = userService;
     }
 
-    @GetMapping("/users")
+    @GetMapping("admin/users")
     public List<User> getAll() {
         return this.userService.findAll();
+    }
+
+    @GetMapping("profile/{email}")
+    public ResponseEntity<?> getProfile(@PathVariable("email") String email) {
+        User user = this.userService.findByEmail(email);
+        return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
     @PostMapping("/register")

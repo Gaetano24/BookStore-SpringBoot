@@ -3,7 +3,6 @@ package it.psw.bookstore.user;
 import it.psw.bookstore.cart.Cart;
 import it.psw.bookstore.cart.CartRepository;
 import it.psw.bookstore.exceptions.MailUserAlreadyExistsException;
-import it.psw.bookstore.exceptions.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,10 +28,7 @@ public class UserService implements UserServiceInterface{
 
     @Override
     @Transactional(readOnly = true)
-    public User findByEmail(String email) throws UserNotFoundException {
-        if(!this.userRepository.existsByEmail(email)) {
-            throw new UserNotFoundException();
-        }
+    public User findByEmail(String email) {
         return this.userRepository.findByEmail(email);
     }
 
