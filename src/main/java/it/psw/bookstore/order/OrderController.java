@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping
+@RequestMapping("profile/orders")
 public class OrderController {
     private final OrderService orderService;
 
@@ -19,13 +19,27 @@ public class OrderController {
         this.orderService = orderService;
     }
 
-    @GetMapping("/profile/orders")
+    @GetMapping
     public ResponseEntity<?> getOrders(@RequestParam String email) {
         List<Order> orders = orderService.findByCustomer(email);
         if(orders.isEmpty()) {
-            return new ResponseEntity<>("No result found", HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>("No results found", HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<>(orders, HttpStatus.OK);
-    }//getOrders
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getOrderDetails(@PathVariable("id") int id, @RequestParam String email) {
+        try {
+            Order order = this.orderService.findOne(id);
+            if(!order.getUser().getEmail().equals(email)) {
+                return new ResponseEntity<>("Unauthorized access", HttpStatus.UNAUTHORIZED);
+            }
+            List<OrderDetail> od = order.getOrderDetails();
+            return new ResponseEntity<>(od, HttpStatus.OK);
+        } catch (OrderNotFoundException e) {
+            return new ResponseEntity<>("Order not found", HttpStatus.NOT_FOUND);
+        }
+    }
 
 }
