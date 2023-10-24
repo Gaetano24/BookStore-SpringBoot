@@ -3,7 +3,6 @@ package it.psw.bookstore.orderDetail;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import it.psw.bookstore.book.Book;
 import it.psw.bookstore.order.Order;
-import it.psw.bookstore.user.User;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
