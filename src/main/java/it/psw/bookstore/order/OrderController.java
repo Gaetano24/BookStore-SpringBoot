@@ -26,7 +26,7 @@ public class OrderController {
 
         List<Order> orders = orderService.findByCustomer(email, pageNumber, pageSize);
         if(orders.isEmpty()) {
-            return new ResponseEntity<>("No results found", HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>("No orders found", HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<>(orders, HttpStatus.OK);
     }
