@@ -20,8 +20,8 @@ public class OrderController {
     }
 
     @GetMapping
-    public ResponseEntity<?> getOrders(@RequestParam int pageNumber,
-                                       @RequestParam int pageSize,
+    public ResponseEntity<?> getOrders(@RequestParam(value = "pageNumber", defaultValue = "0") int pageNumber,
+                                       @RequestParam(value = "pageSize", defaultValue = "10") int pageSize,
                                        @RequestParam String email) {
 
         List<Order> orders = orderService.findByCustomer(email, pageNumber, pageSize);
