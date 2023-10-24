@@ -2,9 +2,13 @@ package it.psw.bookstore.order;
 
 import it.psw.bookstore.exceptions.OrderNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,8 +33,13 @@ public class OrderService implements OrderServiceInterface {
 
     @Override
     @Transactional(readOnly = true)
-    public List<Order> findByCustomer(String email) {
-        return this.orderRepository.findByCustomerEmail(email);
+    public List<Order> findByCustomer(String email, int pageNumber, int pageSize) {
+        Pageable pageable = PageRequest.of(pageNumber, pageSize);
+        Page<Order> pagedResult = this.orderRepository.findByCustomerEmail(email,pageable);
+        if(pagedResult.hasContent()) {
+            return pagedResult.getContent();
+        }
+        return new ArrayList<>();
     }
 
 }

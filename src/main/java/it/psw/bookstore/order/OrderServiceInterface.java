@@ -6,6 +6,6 @@ import java.util.List;
 
 public interface OrderServiceInterface {
     Order findOne(int id) throws OrderNotFoundException;
-    List<Order> findByCustomer(String email);
+    List<Order> findByCustomer(String email, int pageNumber, int pageSize);
 
 }

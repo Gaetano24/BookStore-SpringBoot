@@ -20,8 +20,11 @@ public class OrderController {
     }
 
     @GetMapping
-    public ResponseEntity<?> getOrders(@RequestParam String email) {
-        List<Order> orders = orderService.findByCustomer(email);
+    public ResponseEntity<?> getOrders(@RequestParam int pageNumber,
+                                       @RequestParam int pageSize,
+                                       @RequestParam String email) {
+
+        List<Order> orders = orderService.findByCustomer(email, pageNumber, pageSize);
         if(orders.isEmpty()) {
             return new ResponseEntity<>("No results found", HttpStatus.NOT_FOUND);
         }

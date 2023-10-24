@@ -12,6 +12,6 @@ import java.util.List;
 public interface OrderRepository extends JpaRepository<Order,Integer> {
 
     @Query("SELECT o FROM Order o WHERE o.user.email = :email ORDER BY o.createTime DESC")
-    List<Order> findByCustomerEmail(String email);
+    Page<Order> findByCustomerEmail(String email, Pageable pageable);
 
 }
