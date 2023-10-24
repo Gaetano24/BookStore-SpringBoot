@@ -1,6 +1,7 @@
 package it.psw.bookstore.user;
 
 import it.psw.bookstore.exceptions.MailUserAlreadyExistsException;
+import it.psw.bookstore.exceptions.UserNotFoundException;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -26,8 +27,12 @@ public class UserController {
 
     @GetMapping("profile/{email}")
     public ResponseEntity<?> getProfile(@PathVariable("email") String email) {
-        User user = this.userService.findByEmail(email);
-        return new ResponseEntity<>(user, HttpStatus.OK);
+        try {
+            User user = this.userService.findByEmail(email);
+            return new ResponseEntity<>(user, HttpStatus.OK);
+        } catch (UserNotFoundException e) {
+            return new ResponseEntity<>("User not found", HttpStatus.NOT_FOUND);
+        }
     }
 
     @PostMapping("/register")
