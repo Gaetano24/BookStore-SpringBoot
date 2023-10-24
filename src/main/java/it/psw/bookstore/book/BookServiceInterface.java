@@ -15,7 +15,6 @@ public interface BookServiceInterface {
                               int pageNumber, int pageSize, String sortBy);
     Book save(Book book) throws IsbnAlreadyExistsException;
     void updatePrice(int id, float price) throws BookNotFoundException;
-    void increaseStock(int id, int quantity) throws BookNotFoundException;
     void decreaseStock(int id, int quantity) throws BookNotFoundException, NegativeQuantityException;
 
 }

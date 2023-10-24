@@ -59,7 +59,9 @@ public class BookService implements BookServiceInterface {
 
     @Override
     @Transactional(readOnly = true)
-    public List<Book> advancedSearch(String title, String author, String publisher, String category, int pageNumber, int pageSize, String sortBy) {
+    public List<Book> advancedSearch(String title, String author, String publisher, String category,
+                                     int pageNumber, int pageSize, String sortBy) {
+
         PageRequest pageable = switch (sortBy) {
             case "Titolo A-Z" -> PageRequest.of(pageNumber, pageSize, Sort.by("title").ascending());
             case "Titolo Z-A" -> PageRequest.of(pageNumber, pageSize, Sort.by("title").descending());
@@ -88,15 +90,6 @@ public class BookService implements BookServiceInterface {
     public void updatePrice(int id, float price) throws BookNotFoundException {
         Book book = findById(id);
         book.setPrice(price);
-        this.bookRepository.save(book);
-    }
-
-    @Override
-    @Transactional
-    public void increaseStock(int id, int quantity) throws BookNotFoundException {
-        Book book = findById(id);
-        int newQuantity = book.getQuantity()+quantity;
-        book.setQuantity(newQuantity);
         this.bookRepository.save(book);
     }
 

@@ -2,7 +2,6 @@ package it.psw.bookstore.book;
 
 import it.psw.bookstore.exceptions.BookNotFoundException;
 import it.psw.bookstore.exceptions.IsbnAlreadyExistsException;
-import it.psw.bookstore.exceptions.NegativeQuantityException;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -12,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/books")
+@RequestMapping
 public class BookController {
     private final BookService bookService;
 
@@ -21,7 +20,7 @@ public class BookController {
         this.bookService = bookService;
     }
 
-    @GetMapping
+    @GetMapping("/books")
     public ResponseEntity<?> getAll(@RequestParam(value = "pageNumber", defaultValue = "0") int pageNumber,
                                     @RequestParam(value = "pageSize", defaultValue = "10") int pageSize,
                                     @RequestParam(value = "sortBy", defaultValue = "id") String sortBy) {
@@ -33,7 +32,7 @@ public class BookController {
         return new ResponseEntity<>(books, HttpStatus.OK);
     }
 
-    @GetMapping("/title")
+    @GetMapping("/books/title")
     public ResponseEntity<?> getByTitle(@RequestParam(value = "title") String title,
                                         @RequestParam(value = "pageNumber", defaultValue = "0") int pageNumber,
                                         @RequestParam(value = "pageSize", defaultValue = "10") int pageSize,
@@ -46,7 +45,7 @@ public class BookController {
         return new ResponseEntity<>(books, HttpStatus.OK);
     }
 
-    @GetMapping("/advancedSearch")
+    @GetMapping("/books/advancedSearch")
     public ResponseEntity<?> advancedSearch(@RequestParam(value = "title", defaultValue = "") String title,
                                             @RequestParam(value = "author", defaultValue = "") String author,
                                             @RequestParam(value = "publisher", defaultValue = "") String publisher,
@@ -62,7 +61,7 @@ public class BookController {
         return new ResponseEntity<>(books, HttpStatus.OK);
     }
 
-    @PostMapping("/save")
+    @PostMapping("admin/addBook")
     public ResponseEntity<?> save(@Valid @RequestBody Book book) {
         try {
             Book savedBook = this.bookService.save(book);
@@ -72,35 +71,13 @@ public class BookController {
         }
     }
 
-    @PutMapping("/{id}/updatePrice")
+    @PutMapping("admin/books/{id}/updatePrice")
     public ResponseEntity<?> updatePrice(@PathVariable int id, @RequestParam float newPrice) {
         try {
             bookService.updatePrice(id, newPrice);
             return new ResponseEntity<>("Price updated successfully", HttpStatus.OK);
         } catch (BookNotFoundException e) {
             return new ResponseEntity<>("Book not found", HttpStatus.NOT_FOUND);
-        }
-    }
-
-    @PutMapping("/{id}/increaseStock")
-    public ResponseEntity<?> increaseStock(@PathVariable int id, @RequestParam int quantity) {
-        try {
-            bookService.increaseStock(id, quantity);
-            return new ResponseEntity<>("Stock increased successfully", HttpStatus.OK);
-        } catch (BookNotFoundException e) {
-            return new ResponseEntity<>("Book not found", HttpStatus.NOT_FOUND);
-        }
-    }
-
-    @PutMapping("/{id}/decreaseStock")
-    public ResponseEntity<?> decreaseStock(@PathVariable int id, @RequestParam int quantity) {
-        try {
-            bookService.decreaseStock(id, quantity);
-            return new ResponseEntity<>("Stock decreased successfully", HttpStatus.OK);
-        } catch (BookNotFoundException e) {
-            return new ResponseEntity<>("Book not found", HttpStatus.NOT_FOUND);
-        } catch (NegativeQuantityException e) {
-            return new ResponseEntity<>("Negative Quantity", HttpStatus.BAD_REQUEST);
         }
     }
 
