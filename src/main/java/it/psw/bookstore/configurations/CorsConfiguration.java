@@ -2,12 +2,11 @@ package it.psw.bookstore.configurations;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
 @Configuration
-public class CorsFilterConfiguration {
+public class CorsConfiguration {
 
     /*
     Il filtro CORS è responsabile di gestire e consentire le richieste HTTP
@@ -17,7 +16,7 @@ public class CorsFilterConfiguration {
     @Bean
     public CorsFilter corsFilter() {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        CorsConfiguration configuration = new CorsConfiguration();
+        org.springframework.web.cors.CorsConfiguration configuration = new org.springframework.web.cors.CorsConfiguration();
 
         //Abilita il supporto per l'invio di credenziali
         //(come cookie o intestazioni di autenticazione) nelle richieste CORS.
