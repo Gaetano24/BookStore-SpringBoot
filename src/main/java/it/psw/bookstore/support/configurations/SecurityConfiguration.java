@@ -1,7 +1,7 @@
 package it.psw.bookstore.support.configurations;
 
+import it.psw.bookstore.support.authentication.JwtAuthConverter;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.context.annotation.Bean;
@@ -20,12 +20,13 @@ public class SecurityConfiguration {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/books/**").permitAll()
-                        .anyRequest().authenticated()
+                        .requestMatchers("/profile/**").hasRole("user")
+                        .requestMatchers("/admin/**").hasRole("admin")
+                        .anyRequest().permitAll()
                 );
         http
-                .oauth2ResourceServer(
-                        (oauth2) -> oauth2.jwt(Customizer.withDefaults())
+                .oauth2ResourceServer(oauth2 -> oauth2
+                        .jwt(jwt -> jwt.jwtAuthenticationConverter(new JwtAuthConverter()))
                 );
         http
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));

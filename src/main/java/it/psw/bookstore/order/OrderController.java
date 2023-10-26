@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("profile/orders")
+@RequestMapping
 public class OrderController {
     private final OrderService orderService;
 
@@ -19,10 +19,21 @@ public class OrderController {
         this.orderService = orderService;
     }
 
-    @GetMapping
+    @GetMapping("admin/orders")
     public ResponseEntity<?> getOrders(@RequestParam(value = "pageNumber", defaultValue = "0") int pageNumber,
-                                       @RequestParam(value = "pageSize", defaultValue = "10") int pageSize,
-                                       @RequestParam String email) {
+                                       @RequestParam(value = "pageSize", defaultValue = "10") int pageSize) {
+
+        List<Order> orders = orderService.findAll(pageNumber, pageSize);
+        if(orders.isEmpty()) {
+            return new ResponseEntity<>("No orders found", HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(orders, HttpStatus.OK);
+    }
+
+    @GetMapping("profile/orders")
+    public ResponseEntity<?> getUserOrders(@RequestParam(value = "pageNumber", defaultValue = "0") int pageNumber,
+                                           @RequestParam(value = "pageSize", defaultValue = "10") int pageSize,
+                                           @RequestParam String email) {
 
         List<Order> orders = orderService.findByCustomer(email, pageNumber, pageSize);
         if(orders.isEmpty()) {
@@ -31,7 +42,7 @@ public class OrderController {
         return new ResponseEntity<>(orders, HttpStatus.OK);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("profile/orders/{id}")
     public ResponseEntity<?> getOrderDetails(@PathVariable("id") int id, @RequestParam String email) {
         try {
             Order order = this.orderService.findOne(id);

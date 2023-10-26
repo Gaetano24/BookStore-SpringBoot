@@ -8,6 +8,9 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface OrderRepository extends JpaRepository<Order,Integer> {
+
+    Page<Order> findAllByOrderByCreateTimeDesc(Pageable pageable);
+
     @Query("SELECT o FROM Order o WHERE o.user.email = :email ORDER BY o.createTime DESC")
     Page<Order> findByCustomerEmail(String email, Pageable pageable);
 
