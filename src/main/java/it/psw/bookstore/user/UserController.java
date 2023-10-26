@@ -1,7 +1,7 @@
 package it.psw.bookstore.user;
 
-import it.psw.bookstore.exceptions.MailUserAlreadyExistsException;
-import it.psw.bookstore.exceptions.UserNotFoundException;
+import it.psw.bookstore.support.exceptions.MailUserAlreadyExistsException;
+import it.psw.bookstore.support.exceptions.UserNotFoundException;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

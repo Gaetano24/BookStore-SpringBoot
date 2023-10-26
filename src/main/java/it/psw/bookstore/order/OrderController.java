@@ -1,6 +1,6 @@
 package it.psw.bookstore.order;
 
-import it.psw.bookstore.exceptions.OrderNotFoundException;
+import it.psw.bookstore.support.exceptions.OrderNotFoundException;
 import it.psw.bookstore.orderDetail.OrderDetail;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

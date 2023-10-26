@@ -1,7 +1,7 @@
 package it.psw.bookstore.book;
 
-import it.psw.bookstore.exceptions.BookNotFoundException;
-import it.psw.bookstore.exceptions.IsbnAlreadyExistsException;
+import it.psw.bookstore.support.exceptions.BookNotFoundException;
+import it.psw.bookstore.support.exceptions.IsbnAlreadyExistsException;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

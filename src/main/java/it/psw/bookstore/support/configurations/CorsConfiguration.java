@@ -1,4 +1,4 @@
-package it.psw.bookstore.configurations;
+package it.psw.bookstore.support.configurations;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

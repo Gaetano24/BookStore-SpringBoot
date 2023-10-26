@@ -1,8 +1,8 @@
 package it.psw.bookstore.cart;
 
-import it.psw.bookstore.exceptions.BookNotFoundException;
-import it.psw.bookstore.exceptions.NegativeQuantityException;
-import it.psw.bookstore.exceptions.OutdatedPriceException;
+import it.psw.bookstore.support.exceptions.BookNotFoundException;
+import it.psw.bookstore.support.exceptions.NegativeQuantityException;
+import it.psw.bookstore.support.exceptions.OutdatedPriceException;
 import it.psw.bookstore.order.Order;
 import it.psw.bookstore.user.User;
 

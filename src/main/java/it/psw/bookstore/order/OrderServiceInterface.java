@@ -1,6 +1,6 @@
 package it.psw.bookstore.order;
 
-import it.psw.bookstore.exceptions.OrderNotFoundException;
+import it.psw.bookstore.support.exceptions.OrderNotFoundException;
 
 import java.util.List;
 

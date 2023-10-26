@@ -1,7 +1,7 @@
 package it.psw.bookstore.user;
 
-import it.psw.bookstore.exceptions.MailUserAlreadyExistsException;
-import it.psw.bookstore.exceptions.UserNotFoundException;
+import it.psw.bookstore.support.exceptions.MailUserAlreadyExistsException;
+import it.psw.bookstore.support.exceptions.UserNotFoundException;
 
 import java.util.List;
 

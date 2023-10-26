@@ -1,8 +1,8 @@
 package it.psw.bookstore.book;
 
-import it.psw.bookstore.exceptions.BookNotFoundException;
-import it.psw.bookstore.exceptions.IsbnAlreadyExistsException;
-import it.psw.bookstore.exceptions.NegativeQuantityException;
+import it.psw.bookstore.support.exceptions.BookNotFoundException;
+import it.psw.bookstore.support.exceptions.IsbnAlreadyExistsException;
+import it.psw.bookstore.support.exceptions.NegativeQuantityException;
 
 import java.util.List;
 

@@ -1,8 +1,8 @@
 package it.psw.bookstore.book;
 
-import it.psw.bookstore.exceptions.BookNotFoundException;
-import it.psw.bookstore.exceptions.IsbnAlreadyExistsException;
-import it.psw.bookstore.exceptions.NegativeQuantityException;
+import it.psw.bookstore.support.exceptions.BookNotFoundException;
+import it.psw.bookstore.support.exceptions.IsbnAlreadyExistsException;
+import it.psw.bookstore.support.exceptions.NegativeQuantityException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;

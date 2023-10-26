@@ -1,4 +1,10 @@
 spring:
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8080/realms/BookStore
+          jwk-set-uri: http://localhost:8080/realms/BookStore/protocol/openid-connect/certs
   application:
     name: BookStore-API
   datasource:
@@ -15,4 +21,4 @@ spring:
         format_sql: true # Formatta le query SQL generate per una migliore leggibilità
 
 server:
-  port: 8080
+  port: 8081

@@ -2,8 +2,8 @@ package it.psw.bookstore.user;
 
 import it.psw.bookstore.cart.Cart;
 import it.psw.bookstore.cart.CartRepository;
-import it.psw.bookstore.exceptions.MailUserAlreadyExistsException;
-import it.psw.bookstore.exceptions.UserNotFoundException;
+import it.psw.bookstore.support.exceptions.MailUserAlreadyExistsException;
+import it.psw.bookstore.support.exceptions.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
