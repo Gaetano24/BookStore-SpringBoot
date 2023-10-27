@@ -61,7 +61,7 @@ public class BookController {
         return new ResponseEntity<>(books, HttpStatus.OK);
     }
 
-    @PostMapping("admin/addBook")
+    @PostMapping("/admin/addBook")
     public ResponseEntity<?> save(@Valid @RequestBody Book book) {
         try {
             Book savedBook = this.bookService.save(book);
@@ -71,7 +71,7 @@ public class BookController {
         }
     }
 
-    @PutMapping("admin/books/{id}/updatePrice")
+    @PutMapping("/admin/books/{id}/updatePrice")
     public ResponseEntity<?> updatePrice(@PathVariable int id, @RequestParam float newPrice) {
         try {
             bookService.updatePrice(id, newPrice);

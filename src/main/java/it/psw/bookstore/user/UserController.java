@@ -1,12 +1,13 @@
 package it.psw.bookstore.user;
 
+import it.psw.bookstore.support.authentication.JwtUtils;
 import it.psw.bookstore.support.exceptions.MailUserAlreadyExistsException;
 import it.psw.bookstore.support.exceptions.UserNotFoundException;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,14 +22,15 @@ public class UserController {
         this.userService = userService;
     }
 
-    @GetMapping("admin/users")
+    @GetMapping("/admin/users")
     public List<User> getAll() {
         return this.userService.findAll();
     }
 
-    @GetMapping("profile/{email}")
-    public ResponseEntity<?> getProfile(@PathVariable("email") String email) {
+    @GetMapping("/profile")
+    public ResponseEntity<?> getProfile(Authentication authentication) {
         try {
+            String email = JwtUtils.getEmailFromAuthentication(authentication);
             User user = this.userService.findByEmail(email);
             return new ResponseEntity<>(user, HttpStatus.OK);
         } catch (UserNotFoundException e) {
