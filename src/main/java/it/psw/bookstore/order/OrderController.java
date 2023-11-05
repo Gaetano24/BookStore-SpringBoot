@@ -13,6 +13,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping
+@CrossOrigin(origins = "http://localhost:9090", allowedHeaders = "*")
 public class OrderController {
     private final OrderService orderService;
 
@@ -33,12 +34,9 @@ public class OrderController {
     }
 
     @GetMapping("/profile/orders")
-    public ResponseEntity<?> getUserOrders(@RequestParam(value = "pageNumber", defaultValue = "0") int pageNumber,
-                                           @RequestParam(value = "pageSize", defaultValue = "10") int pageSize,
-                                           Authentication authentication) {
-
+    public ResponseEntity<?> getUserOrders(Authentication authentication) {
         String email = JwtUtils.getEmailFromAuthentication(authentication);
-        List<Order> orders = orderService.findByCustomer(email, pageNumber, pageSize);
+        List<Order> orders = orderService.findByCustomer(email);
         if(orders.isEmpty()) {
             return new ResponseEntity<>("No orders found", HttpStatus.NOT_FOUND);
         }

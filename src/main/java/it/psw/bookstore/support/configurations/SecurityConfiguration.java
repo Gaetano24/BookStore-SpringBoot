@@ -2,6 +2,7 @@ package it.psw.bookstore.support.configurations;
 
 import it.psw.bookstore.support.authentication.JwtAuthConverter;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.context.annotation.Bean;
@@ -20,6 +21,8 @@ public class SecurityConfiguration {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorize -> authorize
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                        .requestMatchers("/books/**").hasRole("user")
                         .requestMatchers("/profile/**").hasRole("user")
                         .requestMatchers("/admin/**").hasRole("admin")
                         .anyRequest().permitAll()
@@ -32,5 +35,7 @@ public class SecurityConfiguration {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
         return http.build();
     }
+
+
 
 }

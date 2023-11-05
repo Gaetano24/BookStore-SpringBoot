@@ -12,7 +12,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping
-@CrossOrigin(origins="*", allowedHeaders = "*")
+@CrossOrigin(origins = "http://localhost:9090", allowedHeaders = "*")
 public class BookController {
     private final BookService bookService;
 

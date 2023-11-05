@@ -43,6 +43,7 @@ public class Order implements Serializable {
     private float total;
 
     @OneToMany(targetEntity = OrderDetail.class, mappedBy = "order", fetch = FetchType.LAZY)
+    @JsonIgnore
     private List<OrderDetail> orderDetails;
 
     public Order(User user) {
