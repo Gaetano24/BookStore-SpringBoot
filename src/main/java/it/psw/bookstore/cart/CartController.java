@@ -3,10 +3,7 @@ package it.psw.bookstore.cart;
 import it.psw.bookstore.cartDetail.CartDetail;
 import it.psw.bookstore.order.Order;
 import it.psw.bookstore.support.authentication.JwtUtils;
-import it.psw.bookstore.support.exceptions.BookNotFoundException;
-import it.psw.bookstore.support.exceptions.NegativeQuantityException;
-import it.psw.bookstore.support.exceptions.OutdatedPriceException;
-import it.psw.bookstore.support.exceptions.UserNotFoundException;
+import it.psw.bookstore.support.exceptions.*;
 import it.psw.bookstore.user.User;
 import it.psw.bookstore.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,6 +65,8 @@ public class CartController {
             return new ResponseEntity<>("Item updated successfully", HttpStatus.OK);
         } catch (UserNotFoundException e) {
             return new ResponseEntity<>("User not found", HttpStatus.NOT_FOUND);
+        } catch (ItemNotFoundException e) {
+            return new ResponseEntity<>("Item not found", HttpStatus.NOT_FOUND);
         }
     }
 
@@ -80,6 +79,8 @@ public class CartController {
             return new ResponseEntity<>("Item deleted successfully", HttpStatus.OK);
         } catch (UserNotFoundException e) {
             return new ResponseEntity<>("User not found", HttpStatus.NOT_FOUND);
+        } catch (ItemNotFoundException e) {
+            return new ResponseEntity<>("Item not found", HttpStatus.NOT_FOUND);
         }
     }
 
