@@ -10,6 +10,7 @@ import java.util.List;
 
 @Repository
 public interface OrderRepository extends JpaRepository<Order,Integer> {
+    Order findById(int id);
 
     Page<Order> findAllByOrderByCreateTimeDesc(Pageable pageable);
 

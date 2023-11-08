@@ -9,9 +9,9 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface BookRepository extends JpaRepository<Book,Integer> {
+    Book findById(int id);
 
     boolean existsByIsbn(String isbn);
-    Book findByIsbn(String isbn);
 
     @Query("SELECT b FROM Book b WHERE (LOWER(b.title) LIKE LOWER(CONCAT('%',:title,'%')))")
     Page<Book> findByTitle(@Param("title") String title, Pageable pageable);

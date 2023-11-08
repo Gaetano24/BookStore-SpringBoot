@@ -1,6 +1,8 @@
 package it.psw.bookstore.user;
 
+import it.psw.bookstore.support.RegistrationRequest;
 import it.psw.bookstore.support.authentication.JwtUtils;
+import it.psw.bookstore.support.exceptions.KeycloackRegistrationException;
 import it.psw.bookstore.support.exceptions.MailUserAlreadyExistsException;
 import it.psw.bookstore.support.exceptions.UserNotFoundException;
 import jakarta.validation.Valid;
@@ -40,12 +42,14 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<?> register(@Valid @RequestBody User user) {
+    public ResponseEntity<?> register(@Valid @RequestBody RegistrationRequest registrationRequest) {
         try {
-            User savedUser = this.userService.save(user);
+            User savedUser = this.userService.register(registrationRequest);
             return new ResponseEntity<>(savedUser, HttpStatus.CREATED);
         } catch (MailUserAlreadyExistsException e) {
             return new ResponseEntity<>("Email already exists", HttpStatus.CONFLICT);
+        } catch (KeycloackRegistrationException e) {
+            return new ResponseEntity<>("Error in registration", HttpStatus.BAD_REQUEST);
         }
     }
 

@@ -2,6 +2,9 @@ package it.psw.bookstore.user;
 
 import it.psw.bookstore.cart.Cart;
 import it.psw.bookstore.cart.CartRepository;
+import it.psw.bookstore.support.Registration;
+import it.psw.bookstore.support.RegistrationRequest;
+import it.psw.bookstore.support.exceptions.KeycloackRegistrationException;
 import it.psw.bookstore.support.exceptions.MailUserAlreadyExistsException;
 import it.psw.bookstore.support.exceptions.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,10 +41,13 @@ public class UserService implements UserServiceInterface{
 
     @Override
     @Transactional
-    public User save(User user) throws MailUserAlreadyExistsException {
+    public User register(RegistrationRequest registrationRequest) throws MailUserAlreadyExistsException,
+                                                                         KeycloackRegistrationException {
+        User user = registrationRequest.getUser();
         if(this.userRepository.existsByEmail(user.getEmail())) {
             throw new MailUserAlreadyExistsException();
         }
+        Registration.keycloackRegistration(registrationRequest);
         User savedUser = this.userRepository.save(user);
         Cart userCart = new Cart();
         userCart.setUser(savedUser);

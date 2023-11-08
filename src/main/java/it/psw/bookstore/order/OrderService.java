@@ -7,10 +7,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class OrderService implements OrderServiceInterface {
@@ -24,11 +22,11 @@ public class OrderService implements OrderServiceInterface {
     @Override
     @Transactional(readOnly = true)
     public Order findOne(int id) throws OrderNotFoundException {
-        Optional<Order> opt = this.orderRepository.findById(id);
-        if(opt.isEmpty()) {
+        Order order = this.orderRepository.findById(id);
+        if(order == null) {
             throw new OrderNotFoundException();
         }
-        return opt.get();
+        return order;
     }
 
     @Override

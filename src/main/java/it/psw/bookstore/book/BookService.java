@@ -2,7 +2,6 @@ package it.psw.bookstore.book;
 
 import it.psw.bookstore.support.exceptions.BookNotFoundException;
 import it.psw.bookstore.support.exceptions.IsbnAlreadyExistsException;
-import it.psw.bookstore.support.exceptions.NegativeQuantityException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -13,11 +12,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class BookService implements BookServiceInterface {
-
     private final BookRepository bookRepository;
 
     @Autowired
@@ -28,11 +25,11 @@ public class BookService implements BookServiceInterface {
     @Override
     @Transactional(readOnly = true)
     public Book findById(int id) throws BookNotFoundException {
-        Optional<Book> opt = this.bookRepository.findById(id);
-        if(opt.isEmpty()) {
+        Book book = this.bookRepository.findById(id);
+        if(book == null) {
             throw new BookNotFoundException();
         }
-        return opt.get();
+        return book;
     }
 
     @Override
@@ -90,18 +87,6 @@ public class BookService implements BookServiceInterface {
     public void updatePrice(int id, float price) throws BookNotFoundException {
         Book book = findById(id);
         book.setPrice(price);
-        this.bookRepository.save(book);
-    }
-
-    @Override
-    @Transactional
-    public void decreaseStock(int id, int quantity) throws BookNotFoundException, NegativeQuantityException {
-        Book book = findById(id);
-        int newQuantity = book.getQuantity()-quantity;
-        if(newQuantity < 0) {
-            throw new NegativeQuantityException();
-        }
-        book.setQuantity(newQuantity);
         this.bookRepository.save(book);
     }
 

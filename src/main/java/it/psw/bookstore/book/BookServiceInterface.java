@@ -2,7 +2,6 @@ package it.psw.bookstore.book;
 
 import it.psw.bookstore.support.exceptions.BookNotFoundException;
 import it.psw.bookstore.support.exceptions.IsbnAlreadyExistsException;
-import it.psw.bookstore.support.exceptions.NegativeQuantityException;
 
 import java.util.List;
 
@@ -15,6 +14,5 @@ public interface BookServiceInterface {
                               int pageNumber, int pageSize, String sortBy);
     Book save(Book book) throws IsbnAlreadyExistsException;
     void updatePrice(int id, float price) throws BookNotFoundException;
-    void decreaseStock(int id, int quantity) throws BookNotFoundException, NegativeQuantityException;
 
 }
