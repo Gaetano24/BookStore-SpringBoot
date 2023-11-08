@@ -47,7 +47,11 @@ public class UserService implements UserServiceInterface{
         if(this.userRepository.existsByEmail(user.getEmail())) {
             throw new MailUserAlreadyExistsException();
         }
-        Registration.keycloackRegistration(registrationRequest);
+        try {
+            Registration.keycloackRegistration(registrationRequest);
+        } catch (KeycloackRegistrationException ke) {
+            throw new KeycloackRegistrationException();
+        }
         User savedUser = this.userRepository.save(user);
         Cart userCart = new Cart();
         userCart.setUser(savedUser);
