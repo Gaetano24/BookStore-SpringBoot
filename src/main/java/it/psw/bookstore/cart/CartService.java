@@ -96,8 +96,7 @@ public class CartService implements CartServiceInterface {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public Order checkout(User user) throws
-            OutdatedPriceException, NegativeQuantityException {
+    public Order checkout(User user) throws OutdatedPriceException, NegativeQuantityException {
 
         Order savedOrder = this.orderRepository.save(new Order(user));
         float total = 0;
