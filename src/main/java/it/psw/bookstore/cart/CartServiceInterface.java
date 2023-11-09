@@ -13,7 +13,7 @@ public interface CartServiceInterface {
     void updateItem(int cartDetailId, int quantity, User user) throws OutdatedCartException;
     void deleteItem(int cartDetailId, User user) throws OutdatedCartException;
     void clear(User user);
-    Order checkout(User user, List<CartDetail> cartDetails) throws
+    Order checkout(User user) throws
             OutdatedPriceException, NegativeQuantityException,
-            OptimisticLockException, OutdatedCartException;
+            OptimisticLockException;
 }

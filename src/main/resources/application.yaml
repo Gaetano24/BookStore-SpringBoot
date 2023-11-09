@@ -17,7 +17,7 @@ spring:
       ddl-auto: validate # Questa opzione non determina cambiamenti del database, effettua solo una validazione
     properties:
       hibernate:
-        show_sql: true # Mostra le query SQL generate da Hibernate (utile per scopi di debug)
+        #/show_sql: true # Mostra le query SQL generate da Hibernate (utile per scopi di debug)
         format_sql: true # Formatta le query SQL generate per una migliore leggibilità
 
 server:

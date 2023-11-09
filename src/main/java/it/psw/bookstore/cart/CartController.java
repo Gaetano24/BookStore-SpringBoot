@@ -12,7 +12,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
 @RestController
@@ -98,11 +97,11 @@ public class CartController {
     }
 
     @PostMapping("/checkout")
-    public ResponseEntity<?> checkout(Authentication authentication, List<CartDetail> cartDetails) {
+    public ResponseEntity<?> checkout(Authentication authentication) {
         try {
             String email = JwtUtils.getEmailFromAuthentication(authentication);
             User user = this.userService.findByEmail(email);
-            Order order = this.cartService.checkout(user, cartDetails);
+            Order order = this.cartService.checkout(user);
             return new ResponseEntity<>(order, HttpStatus.CREATED);
         } catch (OutdatedPriceException oe) {
             return new ResponseEntity<>("Product price not updated", HttpStatus.CONFLICT);
@@ -110,8 +109,6 @@ public class CartController {
             return new ResponseEntity<>("Unavailable quantity", HttpStatus.CONFLICT);
         } catch (UserNotFoundException e) {
             return new ResponseEntity<>("User not found", HttpStatus.NOT_FOUND);
-        }  catch (OutdatedCartException e) {
-            return new ResponseEntity<>("Cart not updated", HttpStatus.CONFLICT);
         } catch (OptimisticLockException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);
         }
