@@ -6,7 +6,6 @@ import it.psw.bookstore.support.authentication.JwtUtils;
 import it.psw.bookstore.support.exceptions.*;
 import it.psw.bookstore.user.User;
 import it.psw.bookstore.user.UserService;
-import jakarta.persistence.OptimisticLockException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

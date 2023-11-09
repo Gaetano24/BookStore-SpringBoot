@@ -11,7 +11,6 @@ import it.psw.bookstore.order.OrderRepository;
 import it.psw.bookstore.orderDetail.OrderDetail;
 import it.psw.bookstore.orderDetail.OrderDetailRepository;
 import it.psw.bookstore.user.User;
-import jakarta.persistence.OptimisticLockException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

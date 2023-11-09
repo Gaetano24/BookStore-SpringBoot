@@ -1,6 +1,5 @@
 package it.psw.bookstore.cart;
 
-import it.psw.bookstore.cartDetail.CartDetail;
 import it.psw.bookstore.support.exceptions.*;
 import it.psw.bookstore.order.Order;
 import it.psw.bookstore.user.User;
