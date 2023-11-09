@@ -109,8 +109,6 @@ public class CartController {
             return new ResponseEntity<>("Unavailable quantity", HttpStatus.CONFLICT);
         } catch (UserNotFoundException e) {
             return new ResponseEntity<>("User not found", HttpStatus.NOT_FOUND);
-        } catch (OptimisticLockException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);
         }
     }
 
