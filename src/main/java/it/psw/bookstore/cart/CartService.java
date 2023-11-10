@@ -66,10 +66,8 @@ public class CartService implements CartServiceInterface {
         if(cd == null || cd.getCart().getId() != cart.getId()) {
             throw new OutdatedCartException();
         }
-        Book book = cd.getBook();
         cd.setQuantity(quantity);
-        cd.setPrice(book.getPrice());
-        cd.setSubTotal(quantity*book.getPrice());
+        cd.setSubTotal(quantity*cd.getPrice());
         this.cartDetailRepository.save(cd);
     }
 
