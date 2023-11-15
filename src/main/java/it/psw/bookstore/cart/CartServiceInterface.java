@@ -11,5 +11,5 @@ public interface CartServiceInterface {
     void deleteItem(int cartDetailId, User user) throws ItemNotFoundException;
     void clear(User user);
     Order checkout(User user) throws OutdatedPriceException, NegativeQuantityException,
-                                     OptimisticLockException;
+            OptimisticLockException, EmptyCartException;
 }

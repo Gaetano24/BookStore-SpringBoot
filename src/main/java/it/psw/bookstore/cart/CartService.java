@@ -16,6 +16,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 public class CartService implements CartServiceInterface {
     private final BookService bookService;
@@ -90,13 +92,17 @@ public class CartService implements CartServiceInterface {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Order checkout(User user) throws OutdatedPriceException, NegativeQuantityException,
-                                            OptimisticLockException {
+                                            OptimisticLockException, EmptyCartException {
 
+        Cart cart = user.getCart();
+        List<CartDetail> cartDetails = cart.getCartDetails();
+        if(cartDetails.isEmpty()) {
+            throw new EmptyCartException();
+        }
         Order savedOrder = this.orderRepository.save(new Order(user));
         float total = 0;
-        Cart cart = user.getCart();
 
-        for(CartDetail item: cart.getCartDetails()) {
+        for(CartDetail item: cartDetails) {
             Book book = item.getBook();
             float currentPrice = book.getPrice();
             float priceInCart = item.getPrice();

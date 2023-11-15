@@ -108,6 +108,8 @@ public class CartController {
             return new ResponseEntity<>("Unavailable quantity", HttpStatus.CONFLICT);
         } catch (UserNotFoundException e) {
             return new ResponseEntity<>("User not found", HttpStatus.NOT_FOUND);
+        } catch (EmptyCartException e) {
+            return new ResponseEntity<>("Cart can't be empty", HttpStatus.BAD_REQUEST);
         }
     }
 
