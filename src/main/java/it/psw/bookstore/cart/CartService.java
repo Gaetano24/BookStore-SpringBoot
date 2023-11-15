@@ -63,8 +63,10 @@ public class CartService implements CartServiceInterface {
         if(cd == null || cd.getCart().getUser().getId() != user.getId()) {
             throw new ItemNotFoundException();
         }
+        Book book = cd.getBook();
         cd.setQuantity(quantity);
-        cd.setSubTotal(quantity*cd.getBook().getPrice());
+        cd.setPrice(book.getPrice());
+        cd.setSubTotal(quantity*book.getPrice());
         this.cartDetailRepository.save(cd);
     }
 
@@ -107,8 +109,6 @@ public class CartService implements CartServiceInterface {
             float currentPrice = book.getPrice();
             float priceInCart = item.getPrice();
             if(Math.abs(priceInCart-currentPrice) >= 0.01f) {
-                item.setPrice(currentPrice);
-                item.setSubTotal(currentPrice* item.getQuantity());
                 throw new OutdatedPriceException();
             }
 
