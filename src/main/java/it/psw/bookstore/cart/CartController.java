@@ -54,18 +54,18 @@ public class CartController {
     }
 
     @PutMapping("/{itemId}")
-    public ResponseEntity<?> updateItem(@PathVariable("itemId") int itemId,
-                                        @RequestParam int quantity,
-                                        Authentication authentication) {
+    public ResponseEntity<?> updateQuantity(@PathVariable("itemId") int itemId,
+                                            @RequestParam int quantity,
+                                            Authentication authentication) {
         try {
             String email = JwtUtils.getEmailFromAuthentication(authentication);
             User user = this.userService.findByEmail(email);
-            this.cartService.updateItem(itemId, quantity, user);
+            this.cartService.updateQuantity(itemId, quantity, user);
             return new ResponseEntity<>("Item updated successfully", HttpStatus.OK);
         } catch (UserNotFoundException e) {
             return new ResponseEntity<>("User not found", HttpStatus.NOT_FOUND);
-        } catch (OutdatedCartException e) {
-            return new ResponseEntity<>("Cart not updated", HttpStatus.CONFLICT);
+        } catch (ItemNotFoundException e) {
+            return new ResponseEntity<>("Item not found", HttpStatus.CONFLICT);
         }
     }
 
@@ -78,8 +78,8 @@ public class CartController {
             return new ResponseEntity<>("Item deleted successfully", HttpStatus.OK);
         } catch (UserNotFoundException e) {
             return new ResponseEntity<>("User not found", HttpStatus.NOT_FOUND);
-        } catch (OutdatedCartException e) {
-            return new ResponseEntity<>("Cart not updated", HttpStatus.CONFLICT);
+        } catch (ItemNotFoundException e) {
+            return new ResponseEntity<>("Item not found", HttpStatus.CONFLICT);
         }
     }
 

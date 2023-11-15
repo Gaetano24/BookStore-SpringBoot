@@ -50,7 +50,7 @@ public class CartDetail implements Serializable {
     @Version
     @JsonIgnore
     @ToString.Exclude
-    @Column(name = "version", nullable = false)
+    @Column(name = "version")
     private long version;
 
     public CartDetail(Cart cart, Book book) {

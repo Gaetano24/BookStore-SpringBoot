@@ -39,45 +39,39 @@ public class CartService implements CartServiceInterface {
     @Override
     @Transactional
     public void addToCart(int bookId, User user) throws BookNotFoundException {
+        Cart cart = user.getCart();
         Book book = this.bookService.findById(bookId);
-        Cart cart = user.getCart();
-        boolean found = false;
-        for(CartDetail cd: cart.getCartDetails()) {
-            if(cd.getBook().getId() == bookId) {
-                int newQuantity = cd.getQuantity()+1;
-                cd.setQuantity(newQuantity);
-                cd.setPrice(book.getPrice());
-                cd.setSubTotal(book.getPrice()*newQuantity);
-                found = true;
-                break;
-            }
+        CartDetail cd = this.cartDetailRepository.findByBookIdAndCartId(bookId, cart.getId());
+        if(cd == null) {
+            cd = new CartDetail(cart, book);
         }
-        if(!found) {
-            CartDetail cd = new CartDetail(cart, book);
-            this.cartDetailRepository.save(cd);
+        else {
+            int newQuantity = cd.getQuantity()+1;
+            cd.setQuantity(newQuantity);
+            cd.setPrice(book.getPrice());
+            cd.setSubTotal(book.getPrice()*newQuantity);
         }
-    }
-
-    @Override
-    @Transactional
-    public void updateItem(int cartDetailId, int quantity, User user) throws OutdatedCartException {
-        Cart cart = user.getCart();
-        CartDetail cd = this.cartDetailRepository.findById(cartDetailId);
-        if(cd == null || cd.getCart().getId() != cart.getId()) {
-            throw new OutdatedCartException();
-        }
-        cd.setQuantity(quantity);
-        cd.setSubTotal(quantity*cd.getPrice());
         this.cartDetailRepository.save(cd);
     }
 
     @Override
     @Transactional
-    public void deleteItem(int cartDetailId, User user) throws OutdatedCartException {
-        Cart cart = user.getCart();
+    public void updateQuantity(int cartDetailId, int quantity, User user) throws ItemNotFoundException {
         CartDetail cd = this.cartDetailRepository.findById(cartDetailId);
-        if(cd == null || cd.getCart().getId() != cart.getId()) {
-            throw new OutdatedCartException();
+        if(cd == null || cd.getCart().getUser().getId() != user.getId()) {
+            throw new ItemNotFoundException();
+        }
+        cd.setQuantity(quantity);
+        cd.setSubTotal(quantity*cd.getBook().getPrice());
+        this.cartDetailRepository.save(cd);
+    }
+
+    @Override
+    @Transactional
+    public void deleteItem(int cartDetailId, User user) throws ItemNotFoundException {
+        CartDetail cd = this.cartDetailRepository.findById(cartDetailId);
+        if(cd == null || cd.getCart().getUser().getId() != user.getId()) {
+            throw new ItemNotFoundException();
         }
         cd.setCart(null);
         this.cartDetailRepository.delete(cd);
@@ -100,14 +94,15 @@ public class CartService implements CartServiceInterface {
 
         Order savedOrder = this.orderRepository.save(new Order(user));
         float total = 0;
-
         Cart cart = user.getCart();
-        for(CartDetail item: cart.getCartDetails()) {
 
+        for(CartDetail item: cart.getCartDetails()) {
             Book book = item.getBook();
             float currentPrice = book.getPrice();
             float priceInCart = item.getPrice();
             if(Math.abs(priceInCart-currentPrice) >= 0.01f) {
+                item.setPrice(currentPrice);
+                item.setSubTotal(currentPrice* item.getQuantity());
                 throw new OutdatedPriceException();
             }
 
