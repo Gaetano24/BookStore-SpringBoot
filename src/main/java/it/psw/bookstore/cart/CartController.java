@@ -4,8 +4,6 @@ import it.psw.bookstore.cartDetail.CartDetail;
 import it.psw.bookstore.order.Order;
 import it.psw.bookstore.support.authentication.JwtUtils;
 import it.psw.bookstore.support.exceptions.*;
-import it.psw.bookstore.user.User;
-import it.psw.bookstore.user.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,20 +17,17 @@ import java.util.LinkedList;
 @CrossOrigin(origins = "http://localhost:9090", allowedHeaders = "*")
 public class CartController {
     private final CartService cartService;
-    private final UserService userService;
 
     @Autowired
-    public CartController(CartService cartService, UserService userService) {
+    public CartController(CartService cartService) {
         this.cartService = cartService;
-        this.userService = userService;
     }
 
     @GetMapping
     public ResponseEntity<?> getCartDetails(Authentication authentication) {
         try {
             String email = JwtUtils.getEmailFromAuthentication(authentication);
-            User user = this.userService.findByEmail(email);
-            Cart cart = this.cartService.getCart(user);
+            Cart cart = this.cartService.getCart(email);
             return new ResponseEntity<>(cart.getCartDetails(), HttpStatus.OK);
         } catch (UserNotFoundException e) {
             return new ResponseEntity<>("User not found", HttpStatus.NOT_FOUND);
@@ -44,8 +39,7 @@ public class CartController {
                                        Authentication authentication) {
         try {
             String email = JwtUtils.getEmailFromAuthentication(authentication);
-            User user = this.userService.findByEmail(email);
-            this.cartService.addToCart(bookId, user);
+            this.cartService.addToCart(bookId, email);
             return new ResponseEntity<>("Book added successfully", HttpStatus.OK);
         } catch (BookNotFoundException e) {
             return new ResponseEntity<>("Book not found", HttpStatus.NOT_FOUND);
@@ -60,13 +54,12 @@ public class CartController {
                                             Authentication authentication) {
         try {
             String email = JwtUtils.getEmailFromAuthentication(authentication);
-            User user = this.userService.findByEmail(email);
-            this.cartService.updateQuantity(itemId, quantity, user);
+            this.cartService.updateQuantity(itemId, quantity, email);
             return new ResponseEntity<>("Item updated successfully", HttpStatus.OK);
         } catch (UserNotFoundException e) {
             return new ResponseEntity<>("User not found", HttpStatus.NOT_FOUND);
-        } catch (ItemNotFoundException e) {
-            return new ResponseEntity<>("Item not found", HttpStatus.CONFLICT);
+        } catch (OutdatedCartException e) {
+            return new ResponseEntity<>("Cart not updated", HttpStatus.CONFLICT);
         }
     }
 
@@ -74,13 +67,12 @@ public class CartController {
     public ResponseEntity<?> deleteItem(@PathVariable("itemId") int itemId, Authentication authentication) {
         try {
             String email = JwtUtils.getEmailFromAuthentication(authentication);
-            User user = this.userService.findByEmail(email);
-            this.cartService.deleteItem(itemId, user);
+            this.cartService.deleteItem(itemId, email);
             return new ResponseEntity<>("Item deleted successfully", HttpStatus.OK);
         } catch (UserNotFoundException e) {
             return new ResponseEntity<>("User not found", HttpStatus.NOT_FOUND);
-        } catch (ItemNotFoundException e) {
-            return new ResponseEntity<>("Item not found", HttpStatus.CONFLICT);
+        } catch (OutdatedCartException e) {
+            return new ResponseEntity<>("Cart not updated", HttpStatus.CONFLICT);
         }
     }
 
@@ -88,8 +80,7 @@ public class CartController {
     public ResponseEntity<?> clear(Authentication authentication) {
         try {
             String email = JwtUtils.getEmailFromAuthentication(authentication);
-            User user = this.userService.findByEmail(email);
-            this.cartService.clear(user);
+            this.cartService.clear(email);
             return new ResponseEntity<>("Cart emptied successfully", HttpStatus.OK);
         } catch (UserNotFoundException e) {
             return new ResponseEntity<>("User not found", HttpStatus.NOT_FOUND);
@@ -101,8 +92,7 @@ public class CartController {
                                       @Valid @RequestBody LinkedList<CartDetail> cartDetails) {
         try {
             String email = JwtUtils.getEmailFromAuthentication(authentication);
-            User user = this.userService.findByEmail(email);
-            Order order = this.cartService.checkout(user, cartDetails);
+            Order order = this.cartService.checkout(email, cartDetails);
             return new ResponseEntity<>(order, HttpStatus.CREATED);
         } catch (OutdatedPriceException oe) {
             return new ResponseEntity<>("Product price not updated", HttpStatus.CONFLICT);
