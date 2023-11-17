@@ -20,6 +20,7 @@ import java.util.List;
 
 @Service
 public class CartService implements CartServiceInterface {
+    private final CartRepository cartRepository;
     private final BookService bookService;
     private final CartDetailRepository cartDetailRepository;
     private final OrderRepository orderRepository;
@@ -27,15 +28,27 @@ public class CartService implements CartServiceInterface {
     private final OrderDetailRepository orderDetailRepository;
 
     @Autowired
-    public CartService(BookService bookService, CartDetailRepository cartDetailRepository,
+    public CartService(CartRepository cartRepository, BookService bookService,
+                       CartDetailRepository cartDetailRepository,
                        OrderRepository orderRepository, BookRepository bookRepository,
                        OrderDetailRepository orderDetailRepository) {
-
+        this.cartRepository = cartRepository;
         this.bookService = bookService;
         this.cartDetailRepository = cartDetailRepository;
         this.orderRepository = orderRepository;
         this.bookRepository = bookRepository;
         this.orderDetailRepository = orderDetailRepository;
+    }
+
+    @Override
+    @Transactional
+    public Cart getCart(User user) {
+        Cart cart = user.getCart();
+        for(CartDetail cd: cart.getCartDetails()) {
+            cd.setPrice(cd.getBook().getPrice());
+            this.cartDetailRepository.save(cd);
+        }
+        return this.cartRepository.save(cart);
     }
 
     @Override

@@ -6,6 +6,7 @@ import it.psw.bookstore.user.User;
 import jakarta.persistence.OptimisticLockException;
 
 public interface CartServiceInterface {
+    Cart getCart(User user);
     void addToCart(int bookId, User user) throws BookNotFoundException;
     void updateQuantity(int cartDetailId, int quantity, User user) throws ItemNotFoundException;
     void deleteItem(int cartDetailId, User user) throws ItemNotFoundException;

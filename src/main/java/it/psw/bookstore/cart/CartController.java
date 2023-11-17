@@ -1,6 +1,5 @@
 package it.psw.bookstore.cart;
 
-import it.psw.bookstore.cartDetail.CartDetail;
 import it.psw.bookstore.order.Order;
 import it.psw.bookstore.support.authentication.JwtUtils;
 import it.psw.bookstore.support.exceptions.*;
@@ -11,7 +10,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
-import java.util.List;
 
 @RestController
 @RequestMapping("/profile/cart")
@@ -31,8 +29,8 @@ public class CartController {
         try {
             String email = JwtUtils.getEmailFromAuthentication(authentication);
             User user = this.userService.findByEmail(email);
-            List<CartDetail> cartDetails = user.getCart().getCartDetails();
-            return new ResponseEntity<>(cartDetails, HttpStatus.OK);
+            Cart cart = this.cartService.getCart(user);
+            return new ResponseEntity<>(cart.getCartDetails(), HttpStatus.OK);
         } catch (UserNotFoundException e) {
             return new ResponseEntity<>("User not found", HttpStatus.NOT_FOUND);
         }
