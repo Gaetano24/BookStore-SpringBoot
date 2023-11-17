@@ -1,15 +1,18 @@
 package it.psw.bookstore.cart;
 
+import it.psw.bookstore.cartDetail.CartDetail;
 import it.psw.bookstore.order.Order;
 import it.psw.bookstore.support.authentication.JwtUtils;
 import it.psw.bookstore.support.exceptions.*;
 import it.psw.bookstore.user.User;
 import it.psw.bookstore.user.UserService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import java.util.LinkedList;
 
 @RestController
 @RequestMapping("/profile/cart")
@@ -94,11 +97,12 @@ public class CartController {
     }
 
     @PostMapping("/checkout")
-    public ResponseEntity<?> checkout(Authentication authentication) {
+    public ResponseEntity<?> checkout(Authentication authentication,
+                                      @Valid @RequestBody LinkedList<CartDetail> cartDetails) {
         try {
             String email = JwtUtils.getEmailFromAuthentication(authentication);
             User user = this.userService.findByEmail(email);
-            Order order = this.cartService.checkout(user);
+            Order order = this.cartService.checkout(user, cartDetails);
             return new ResponseEntity<>(order, HttpStatus.CREATED);
         } catch (OutdatedPriceException oe) {
             return new ResponseEntity<>("Product price not updated", HttpStatus.CONFLICT);
@@ -108,6 +112,8 @@ public class CartController {
             return new ResponseEntity<>("User not found", HttpStatus.NOT_FOUND);
         } catch (EmptyCartException e) {
             return new ResponseEntity<>("Cart can't be empty", HttpStatus.BAD_REQUEST);
+        } catch (OutdatedCartException e) {
+            return new ResponseEntity<>("Cart not updated", HttpStatus.CONFLICT);
         }
     }
 

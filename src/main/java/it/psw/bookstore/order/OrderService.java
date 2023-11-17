@@ -42,10 +42,11 @@ public class OrderService implements OrderServiceInterface {
 
     @Override
     @Transactional(readOnly = true)
-    public List<Order> findByCustomer(String email) {
-        List<Order> orders = this.orderRepository.findByCustomerEmail(email);
-        if(!orders.isEmpty()) {
-            return orders;
+    public List<Order> findByUser(String email, int pageNumber, int pageSize) {
+        Pageable pageable = PageRequest.of(pageNumber, pageSize);
+        Page<Order> pagedResult = this.orderRepository.findByUserEmailOrderByCreateTimeDesc(email, pageable);
+        if(pagedResult.hasContent()) {
+            return pagedResult.getContent();
         }
         return new ArrayList<>();
     }

@@ -14,7 +14,6 @@ public interface OrderRepository extends JpaRepository<Order,Integer> {
 
     Page<Order> findAllByOrderByCreateTimeDesc(Pageable pageable);
 
-    @Query("SELECT o FROM Order o WHERE o.user.email = :email ORDER BY o.createTime DESC")
-    List<Order> findByCustomerEmail(String email);
+    Page<Order> findByUserEmailOrderByCreateTimeDesc(String email, Pageable pageable);
 
 }

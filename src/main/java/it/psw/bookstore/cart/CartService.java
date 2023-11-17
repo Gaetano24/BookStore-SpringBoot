@@ -16,11 +16,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.LinkedList;
 import java.util.List;
 
 @Service
 public class CartService implements CartServiceInterface {
-    private final CartRepository cartRepository;
     private final BookService bookService;
     private final CartDetailRepository cartDetailRepository;
     private final OrderRepository orderRepository;
@@ -28,11 +28,9 @@ public class CartService implements CartServiceInterface {
     private final OrderDetailRepository orderDetailRepository;
 
     @Autowired
-    public CartService(CartRepository cartRepository, BookService bookService,
-                       CartDetailRepository cartDetailRepository,
+    public CartService(BookService bookService, CartDetailRepository cartDetailRepository,
                        OrderRepository orderRepository, BookRepository bookRepository,
                        OrderDetailRepository orderDetailRepository) {
-        this.cartRepository = cartRepository;
         this.bookService = bookService;
         this.cartDetailRepository = cartDetailRepository;
         this.orderRepository = orderRepository;
@@ -45,10 +43,11 @@ public class CartService implements CartServiceInterface {
     public Cart getCart(User user) {
         Cart cart = user.getCart();
         for(CartDetail cd: cart.getCartDetails()) {
-            cd.setPrice(cd.getBook().getPrice());
-            this.cartDetailRepository.save(cd);
+            Book book = cd.getBook();
+            cd.setPrice(book.getPrice());
+            cd.setSubTotal(book.getPrice());
         }
-        return this.cartRepository.save(cart);
+        return cart;
     }
 
     @Override
@@ -106,18 +105,31 @@ public class CartService implements CartServiceInterface {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public Order checkout(User user) throws OutdatedPriceException, NegativeQuantityException,
-                                            OptimisticLockException, EmptyCartException {
+    public Order checkout(User user, LinkedList<CartDetail> cartDetails) throws OutdatedPriceException,
+                                                                                NegativeQuantityException,
+                                                                                OptimisticLockException,
+                                                                                EmptyCartException,
+                                                                                OutdatedCartException {
 
-        Cart cart = user.getCart();
-        List<CartDetail> cartDetails = cart.getCartDetails();
+        List<CartDetail> dbCartDetails = user.getCart().getCartDetails();
+        if(dbCartDetails.size() != cartDetails.size()) {
+            throw new OutdatedCartException();
+        }
         if(cartDetails.isEmpty()) {
             throw new EmptyCartException();
         }
+
         Order savedOrder = this.orderRepository.save(new Order(user));
         float total = 0;
+        for(CartDetail cd: cartDetails) {
+            CartDetail item = this.cartDetailRepository.findById(cd.getId());
+            if(item == null || item.getCart().getUser().getId() != user.getId()) {
+                throw new OutdatedCartException();
+            }
+            if(item.getQuantity() != cd.getQuantity()) {
+                throw new OutdatedCartException();
+            }
 
-        for(CartDetail item: cartDetails) {
             Book book = item.getBook();
             float currentPrice = book.getPrice();
             float priceInCart = item.getPrice();
@@ -135,14 +147,13 @@ public class CartService implements CartServiceInterface {
 
             OrderDetail od = new OrderDetail(updatedBook,savedOrder,priceInCart,quantity);
             this.orderDetailRepository.save(od);
-
             item.setCart(null);
             this.cartDetailRepository.delete(item);
 
             total += priceInCart*quantity;
         }
         savedOrder.setTotal(total);
-        return this.orderRepository.save(savedOrder);
+        return savedOrder;
     }
 
 }

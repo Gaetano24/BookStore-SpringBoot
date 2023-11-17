@@ -34,9 +34,12 @@ public class OrderController {
     }
 
     @GetMapping("/profile/orders")
-    public ResponseEntity<?> getUserOrders(Authentication authentication) {
+    public ResponseEntity<?> getUserOrders(Authentication authentication,
+                                           @RequestParam(value = "pageNumber", defaultValue = "0") int pageNumber,
+                                           @RequestParam(value = "pageSize", defaultValue = "10") int pageSize) {
+
         String email = JwtUtils.getEmailFromAuthentication(authentication);
-        List<Order> orders = orderService.findByCustomer(email);
+        List<Order> orders = orderService.findByUser(email, pageNumber, pageSize);
         if(orders.isEmpty()) {
             return new ResponseEntity<>("No orders found", HttpStatus.NOT_FOUND);
         }
