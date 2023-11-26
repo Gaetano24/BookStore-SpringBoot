@@ -48,8 +48,9 @@ public class CartService implements CartServiceInterface {
         for(CartDetail cd: cart.getCartDetails()) {
             Book book = cd.getBook();
             cd.setPrice(book.getPrice());
-            cd.setSubTotal(book.getPrice());
+            cd.setSubTotal(cd.getQuantity()*book.getPrice());
         }
+        System.out.println(cart);
         return cart;
     }
 
